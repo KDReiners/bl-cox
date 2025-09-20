@@ -92,4 +92,28 @@ jobs:
           name: outbox-cox-exp1
           path: ${{ github.workspace }}/.outbox_smoke/cox/experiment_1
 
+      - name: Configure auth for private submodules (GitHub)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf https://github.com/
+
+      - name: Update shared-config submodule to latest
+        run: |
+          git submodule update --init --remote --depth 1 config/shared
+
+      - name: Print shared-config commit and upload build-info
+        run: |
+          SHA=$(git -C config/shared rev-parse HEAD)
+          echo "shared-config: $SHA"
+          echo "shared-config: $SHA" >> $GITHUB_STEP_SUMMARY
+          printf "%s" "$SHA" > shared_config_commit.txt
+        shell: bash
+
+      - name: Upload build info
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-info
+          path: shared_config_commit.txt
+
 
