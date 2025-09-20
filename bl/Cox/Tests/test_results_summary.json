@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-08-21T14:13:43",
+  "project_root": "/Users/kdreiners/code/Cursor-ChurnPrediction",
+  "steps": [
+    {
+      "name": "cox_panel_creation",
+      "status": "ok",
+      "panel_json": "/Users/kdreiners/code/Cursor-ChurnPrediction/dynamic_system_outputs/cox_survival_data/cox_survival_panel_v4_2025-08-21T14-14-19.json"
+    },
+    {
+      "name": "cox_prioritization",
+      "status": "ok",
+      "prioritization_csv": "/Users/kdreiners/code/Cursor-ChurnPrediction/dynamic_system_outputs/prioritization/prioritization_2025-08-21T14-14-33.csv",
+      "prioritization_meta": {
+        "cutoff_exclusive": 202501,
+        "horizons": [
+          6,
+          12
+        ],
+        "rmst_horizons": [
+          12,
+          24
+        ],
+        "weights": [
+          0.6,
+          0.3,
+          0.1
+        ],
+        "feature_columns": [
+          "I_MAINTENANCE",
+          "I_UPGRADE",
+          "I_UPSELL",
+          "I_CONSULTING",
+          "I_DOWNGRADE",
+          "I_DOWNSELL",
+          "I_UHD",
+          "I_SEMINAR",
+          "I_SOCIALINSURANCENOTES",
+          "N_DIGITALIZATIONRATE"
+        ],
+        "c_index": 0.7583837167286075,
+        "horizon_max": 84.0,
+        "num_samples": 6271,
+        "num_active": 4558,
+        "num_at_horizon": 4558,
+        "mean_p12": 0.012757768779452778,
+        "runtime_s": 12.112,
+        "export_csv": "/Users/kdreiners/code/Cursor-ChurnPrediction/dynamic_system_outputs/prioritization/prioritization_2025-08-21T14-14-33.csv"
+      }
+    },
+    {
+      "name": "cutoff_comparison",
+      "status": "ok",
+      "validations": {
+        "cutoff_a": 202401,
+        "cutoff_b": 202501,
+        "meta_a_cutoff": 202401,
+        "meta_b_cutoff": 202501,
+        "rows_a": 4614,
+        "rows_b": 4558,
+        "alive_a_upper_bound": 4755,
+        "alive_b_upper_bound": 4713,
+        "rows_a_le_alive_a": true,
+        "rows_b_le_alive_b": true,
+        "spot_check_a_ok": true,
+        "spot_check_b_ok": true
+      },
+      "prioritization_csv_a": "/Users/kdreiners/code/Cursor-ChurnPrediction/dynamic_system_outputs/prioritization/prioritization_2025-08-21T14-14-45.csv",
+      "prioritization_csv_b": "/Users/kdreiners/code/Cursor-ChurnPrediction/dynamic_system_outputs/prioritization/prioritization_2025-08-21T14-14-57.csv"
+    }
+  ],
+  "success": true
+}
