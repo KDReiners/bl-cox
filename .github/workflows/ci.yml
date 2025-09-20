@@ -61,4 +61,19 @@ jobs:
           print('Smoke imports OK')
           PY
 
+      - name: Outbox smoke test (directory only)
+        env:
+          OUTBOX_ROOT: ${{ github.workspace }}/.outbox_smoke
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from config.paths_config import ProjectPaths
+          os.makedirs(os.environ['OUTBOX_ROOT'], exist_ok=True)
+          p = ProjectPaths.outbox_cox_experiment_directory(1)
+          Path(p).mkdir(parents=True, exist_ok=True)
+          assert Path(p).exists()
+          print(f'Created: {p}')
+          PY
+
 
