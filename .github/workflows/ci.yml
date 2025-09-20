@@ -76,4 +76,22 @@ jobs:
           print(f'Created: {p}')
           PY
 
+      - name: Create OUTBOX marker
+        env:
+          OUTBOX_ROOT: ${{ github.workspace }}/.outbox_smoke
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root = Path('${{ github.workspace }}')/'.outbox_smoke'/'cox'/'experiment_1'
+          root.mkdir(parents=True, exist_ok=True)
+          (root/'ci_marker.txt').write_text('ok', encoding='utf-8')
+          print('Marker written')
+          PY
+
+      - name: Upload OUTBOX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: outbox-cox-exp1
+          path: ${{ github.workspace }}/.outbox_smoke/cox/experiment_1
+
 
