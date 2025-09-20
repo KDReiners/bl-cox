@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Compile Python files (syntax check)
+        run: |
+          python -m compileall -q bl config || (echo "Syntax errors detected" && exit 1)
+
+      - name: Validate shared JSONs
+        if: ${{ hashFiles('config/shared/config/*.json') != '' }}
+        run: |
+          python - <<'PY'
+          import json,glob,sys
+          files=glob.glob('config/shared/config/*.json')
+          failed=False
+          for f in files:
+              try:
+                  json.load(open(f,'r',encoding='utf-8'))
+              except Exception as e:
+                  print(f'Invalid JSON: {f}: {e}')
+                  failed=True
+          sys.exit(1 if failed else 0)
+          PY
+
+
