@@ -13,17 +13,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure auth for private submodules (GitHub)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf https://github.com/
-
-      - name: Update shared-config submodule early (for caching)
-        run: |
-          git submodule update --init --remote --depth 1 config/shared
+      - name: Checkout shared-config (optional)
+        if: ${{ secrets.SHARED_CONFIG_TOKEN != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: KDReiners/shared-config
+          path: config/shared
+          ref: main
+          token: ${{ secrets.SHARED_CONFIG_TOKEN }}
 
       - name: Write shared-config commit file
+        if: ${{ hashFiles('config/shared/**') != '' }}
         run: |
           git -C config/shared rev-parse HEAD > shared_config_commit.txt
 
@@ -117,6 +117,7 @@ jobs:
       
 
       - name: Print shared-config commit and upload build-info
+        if: ${{ hashFiles('config/shared/**') != '' }}
         run: |
           SHA=$(git -C config/shared rev-parse HEAD)
           echo "shared-config: $SHA"
@@ -125,6 +126,7 @@ jobs:
         shell: bash
 
       - name: Upload build info
+        if: ${{ hashFiles('shared_config_commit.txt') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: build-info
