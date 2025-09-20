@@ -19,6 +19,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Compile Python files (syntax check)
         run: |
@@ -38,6 +44,21 @@ jobs:
                   print(f'Invalid JSON: {f}: {e}')
                   failed=True
           sys.exit(1 if failed else 0)
+          PY
+
+      - name: Import smoke tests
+        run: |
+          python - <<'PY'
+          import importlib
+          modules = [
+            'config.paths_config',
+            'bl.Cox.cox_auto_processor',
+            'bl.Cox.cox_model_trainer',
+            'bl.Cox.cox_evaluator',
+          ]
+          for m in modules:
+              importlib.import_module(m)
+          print('Smoke imports OK')
           PY
 
 
